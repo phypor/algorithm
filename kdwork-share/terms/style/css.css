@@ -278,7 +278,7 @@ img{-ms-interpolation-mode:bicubic}
 .doc{font-size:14px;padding:0 10px;max-width:940px}
 .doc h1,.doc h2,.doc h3,.doc h4{font-weight:700}
 .doc ul{margin-bottom:20px}
-.content.doc li{line-height:1.8;list-style:disc;margin-left:32px;position:relative}
+.doc li{line-height:1.8;list-style:disc;margin-left:32px;position:relative}
 .doc li>ul>li{list-style:circle;margin-left:40px}
 .doc li>ul>li>ul>li{list-style:square;margin-left:40px}
 .doc p{line-height:1.8;margin-bottom:20px}
