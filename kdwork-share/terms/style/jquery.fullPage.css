@@ -1,0 +1,253 @@
+/**
+ * fullPage 2.4.6
+ * https://github.com/alvarotrigo/fullPage.js
+ * MIT licensed
+ *
+ * Copyright (C) 2013 alvarotrigo.com - A project by Alvaro Trigo
+ */
+@charset "utf-8";
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow:hidden;
+	font-family: Arial, "微软雅黑";
+    /*Avoid flicker on slides transitions for mobile phones #336 */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+div,form,img,ul,ol,li,dl,dt,dd,p { margin: 0; padding: 0; border: 0;}
+
+li{ list-style:none;}
+
+h1,h2,h3,h4,h5,h6,input { margin:0; padding:0;}
+
+a{ color: #333333; text-decoration:none}
+a:hover{ color: #333333; text-decoration:underline}
+
+
+.spaceline{clear:both; line-height:5px; height:5px; margin:0 auto}
+
+
+img{border:0;}
+
+caption{text-align: left;}
+input {color:#4c4c4c;font:12px Arial, Helvetica, sans-serif;}
+textarea {color:#4c4c4c;font:12px Arial, Helvetica, sans-serif;}
+select {color:#4c4c4c;font:12px Arial, Helvetica, sans-serif;}
+.clear {clear: both;}
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+
+
+
+
+.clearfix {
+	display: block;
+}
+input {color:#000000;font:12px Arial, Helvetica, sans-serif;}
+textarea {color:#000000;font:12px Arial, Helvetica, sans-serif;}
+select {color:#000000;font:12px Arial, Helvetica, sans-serif;}
+#superContainer {
+    height: 100%;
+    position: relative;
+
+    /* Touch detection for Windows 8 */
+    -ms-touch-action: none;
+
+    /* IE 11 on Windows Phone 8.1*/
+    touch-action: none;
+}
+.fp-section {
+    position: relative;
+    -webkit-box-sizing: border-box; /* Safari<=5 Android<=3 */
+    -moz-box-sizing: border-box; /* <=28 */
+    box-sizing: border-box;
+}
+.fp-slide {
+    float: left;
+}
+.fp-slide, .fp-slidesContainer {
+    height: 100%;
+    display: block;
+}
+.fp-slides {
+    z-index:1;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    -webkit-transition: all 0.3s ease-out; /* Safari<=6 Android<=4.3 */
+    transition: all 0.3s ease-out;
+}
+.fp-section.fp-table, .fp-slide.fp-table {
+    display: table;
+    table-layout:fixed;
+    width: 100%;
+}
+.fp-tableCell {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+}
+.fp-slidesContainer {
+    float: left;
+    position: relative;
+}
+.fp-controlArrow {
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    margin-top: -38px;
+}
+.fp-controlArrow.fp-prev {
+    left: 15px;
+    width: 0;
+    border-width: 38.5px 34px 38.5px 0;
+    border-color: transparent #fff transparent transparent;
+}
+.fp-controlArrow.fp-next {
+    right: 15px;
+    border-width: 38.5px 0 38.5px 34px;
+    border-color: transparent transparent transparent #fff;
+}
+.fp-scrollable {
+    overflow: scroll;
+
+}
+.fp-notransition {
+    -webkit-transition: none !important;
+    transition: none !important;
+}
+#fp-nav {
+    position: fixed;
+    z-index: 100;
+    margin-top: -32px;
+    top: 50%;
+    opacity: 1;
+}
+#fp-nav.right {
+    right: 17px;
+}
+#fp-nav.left {
+    left: 17px;
+}
+.fp-slidesNav{
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    opacity: 1;
+}
+.fp-slidesNav.bottom {
+    bottom: 17px;
+}
+.fp-slidesNav.top {
+    top: 17px;
+}
+#fp-nav ul,
+.fp-slidesNav ul {
+  margin: 0;
+  padding: 0;
+}
+#fp-nav ul li,
+.fp-slidesNav ul li {
+    display: block;
+    width: 16px;
+    height: 15px;
+    margin: 10px;
+    position:relative;
+}
+.fp-slidesNav ul li {
+    display: inline-block;
+}
+#fp-nav ul li a,
+.fp-slidesNav ul li a {
+    display: block;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    text-decoration: none;
+}
+#fp-nav ul li a.active span,
+.fp-slidesNav ul li a.active span {
+    background: #fff;
+	opacity:1
+}
+#fp-nav ul li a span,
+.fp-slidesNav ul li a span {
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 1;
+	opacity:0.5
+}
+#fp-nav ul li .fp-tooltip {
+    position: absolute;
+    top: -2px;
+    color: #fff;
+    font-size: 14px;
+    font-family: arial, helvetica, sans-serif;
+    white-space: nowrap;
+    max-width: 220px;
+    overflow: hidden;
+    display: block;
+    opacity: 0;
+    width: 0;
+}
+#fp-nav ul li:hover .fp-tooltip {
+    -webkit-transition: opacity 0.2s ease-in;
+    transition: opacity 0.2s ease-in;
+    width: auto;
+    opacity: 1;
+}
+#fp-nav ul li .fp-tooltip.right {
+    right: 20px;
+}
+#fp-nav ul li .fp-tooltip.left {
+    left: 20px;
+}
+/*--------------------top------------*/
+.top{width:100%; height:40px; background-color:#e0e0e0; min-width:1000px; position:absolute; z-index:2; top:0}
+.top_main{width:1000px; margin:0 auto}
+.top_left{float:left; font-size:14px; line-height:40px; color:#383838}
+.top_left span{padding-right:8px}
+.top_left a{color:#939393}
+.top_right{float:right; font-size:14px; line-height:40px; }
+.top_right span{ padding-left:15px}
+.top_right a{color:#666666}
+
+/*--------------------xc------------*/
+.xc1_box{height:100%; text-align:center; background:url(../images/xc1.jpg) center bottom no-repeat}
+.xc2_box{width:1000px; margin:auto}
+.xc3_box{height:100%; text-align:center; background:url(../images/xc3.jpg) center bottom no-repeat}
+.xc4_box{height:100%; text-align:center; background:url(../images/xc4.jpg) center bottom no-repeat}
+.xc5_box{height:100%; text-align:center; background:url(../images/xc5.jpg) center bottom no-repeat}
+.xc6_box{height:100%; background:url(../images/xc6.jpg) center bottom no-repeat; position:relative; z-index:2} 
+.xc6_bg{width:100%; height:1px; position:absolute; z-index:1; bottom:466px; overflow:hidden; background-color:#5eafe2}
+.xc7_box{height:100%; text-align:center; background:url(../images/xc7.jpg) center bottom no-repeat}
+.xc8_box{height:100%; background:url(../images/xc8.jpg) center bottom no-repeat}
+.xc1_btn{width:288px; height:38px; position:absolute; margin-left:-144px; left:50%; bottom:77px}
+.xc1_btn ul{margin:0}
+.xc1_btn ul li{width:128px; float:left; height:38px; padding:0 8px}
+.xc1_btn ul li img{opacity:0.7}
+.xc1_btn ul li img:hover{opacity:1}
+.xc8_btn{width:128px; height:168px; position:absolute; right:50%; top:30px; margin-right:292px}
+.xc8_btn ul{margin:0}
+.xc8_btn ul li{width:128px; float:left; height:38px; padding-top:18px}
+.xc8_btn ul li img{opacity:0.7}
+.xc8_btn ul li img:hover{opacity:1}
+.gzwx{width:185px; height:183px; position:absolute; right:50%; top:250px; margin-right:263px}
