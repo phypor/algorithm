@@ -1,0 +1,3 @@
+这里不要把sql写在service中，所有的sql都必须放在server.dao模块中
+只做实现server.impl中定义的接口
+因此必须依赖与server.dao和server.service两个模块,可能需要依赖与server.common

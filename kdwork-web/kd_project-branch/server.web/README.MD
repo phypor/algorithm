@@ -1,0 +1,2 @@
+接口api在这里统一放置
+只依赖于server.impl

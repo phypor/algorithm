@@ -1,0 +1,3 @@
+service接口定义模块
+实现是由server.impl来实现的
+这个模块最多只依赖于server.beans
