@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>UJOB-最受大学生欢迎的求职网站</title>
+<meta content="UJOB,中文名是快点优职，这是一款全新的求职社交应用，是广州果笔信息科技精心打磨之作。它专注于服务大学生求职领域，深度垂直，把求职分为找兼职、找实习、找全职三大细分模块，不断提高兼职、实习、全职三大领域的职位质量，被誉为校园招聘领域的UBER。" name="description">
+<meta content="快点优职官方网站,快点优职,优职,UJOB,求职招聘网站" name="keywords">
+<link href="style/css.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="images/favicon.ico" />
+<script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+function ChangeLi(now){
+	for(i=0; i<=6; i++)
+	{
+		//$(".right_main ul li").eq(i).children("a").removeClass("active");
+		$(".right_main ul li").children("a").each(function(){$(this).removeClass("active");})
+	}
+	$(".right_main ul li").eq(now).children("a").addClass("active");
+	var a=now*60+60+"px";
+	$(".left_line").animate({top:a},"300");
+	}
+window.onscroll = function(){
+	var dis =$(document).scrollTop();
+		var obj = jQuery('#right');
+	if(dis > 700){
+		obj.addClass('addfix');
+	}
+	else{
+		obj.removeClass('addfix');
+		}
+		/*for(now=1; now<=7; now++){
+		
+			var b="a"+now;
+			var y=parseInt($(document).scrollTop()-document.getElementById(b).offsetTop);
+		if(y>=0){ChangeLi(now-1)}
+		}*/
+}
+function ChangeJn(now){
+
+		$(".xiangmu ul li").children("a").each(function(){$(this).removeClass("active");})
+
+	$(".xiangmu ul li").eq(now).children("a").addClass("active");
+	}
+</script>
+</head>
+<body>
+
+<div class="top">
+	<div class="top_main">
+    	<div class="top_left"><span>广州</span><a href="#">[切换城市]</a></div>
+        <div class="top_right">
+        <span><a href="#">登录</a></span><span><a href="#">注册</a></span><span><a href="#">个人中心</a></span><span><a href="#">手机客户端</a></span><span><a href="#">我们的故事</a></span>
+        </div>
+    </div>
+</div>
+<div class="nav">
+	<div class="nav_logo"><img src="images/logo.jpg" /></div>
+    <div class="menu">
+    	<ul>
+        <li><a href="#">首页</a></li>
+        <li><a href="#" class="hover">找工作</a></li>
+        <li><a href="#">义旅意行</a></li>
+        <li><a href="#">我们的故事</a></li>
+        <li><a href="#">公司介绍</a></li>
+        <li><a href="#">联系我们</a></li>
+        </ul>
+    </div>
+    <div class="nav_right">
+    	<div onmouseout="this.className=''" onmouseover="this.className='hover'">
+    		<a href="javascript:;"><img src="images/shezhi.png" /></a>
+            <div class="dropmenu">
+            	<ul>
+                <li><a href="#">我的简历</a></li>
+                <li><a href="#">我的收藏</a></li>
+                <li><a href="#">投递记录</a></li>
+                <li><a href="#">发布招聘</a></li>
+                <li><a href="#">消息中心</a></li>
+                <li><a href="#">设置</a></li>
+                <li><a href="#">退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="xian"></div>
+<div class="jianli">
+	<div class="jianli_top">
+    	<div class="tx"><img src="images/tx.jpg" width="111" height="111" /></div>
+        <div class="genghuan"><span>更换</span><a><input type="file" name="uploadFile" /></a></div>
+    </div>
+    <div class="jianli_jieshao">
+    	<input type="text" placeholder="一句话介绍你自己，30字以内" />
+        <span><a class="baocun">保存</a></span>
+        <span><a class="quxiao">取消</a></span>
+    </div>
+    <div class="jianli_jieshao_save" style="display:none">
+        <h1><span>李亚鹏</span></h1>
+        <p>”非常可爱的一个人，喜欢画画摄影弹吉他“</p>
+        <div class="edit"><a href="#">编辑</a></div>
+    </div>
+    <div class="jianli_main">
+    	<div class="left">
+        	<div class="jianli_list">
+        		<h1 id="a1" class="grxx">个人信息<span style="display:none"><a href="#">编辑</a></span></h1>
+                <div class="grxx_box">
+                	<ul>
+                    <li><input name="" type="text" placeholder="姓名" /></li>
+                    <li class="gap">
+                    	<div id="sp_search1" class="search1" onclick="xuanze(1,event)">
+                    	<span class="xiala">男</span>
+                        <div class="sch_sel_m" style="display: none;" id="dd1">
+	<a href="javascript:void(0)">男</a> <a href="javascript:void(0)">女</a>
+						</div>
+                        </div>
+                    </li>
+                    <li><input name="" type="text" placeholder="年龄" /></li><li class="gap"><input name="" type="text" placeholder="身高/cm" /></li>
+                    <li><input name="" type="text" placeholder="民族" /></li>
+                    <li class="gap">
+                    <div id="sp_search2" class="search1" onclick="xuanze(2,event)">
+                    	<span class="xiala">未婚</span>
+                        <div class="sch_sel_m" style="display: none;" id="dd2">
+	<a href="javascript:void(0)">未婚</a> <a href="javascript:void(0)">已婚</a>
+						</div>
+                        </div>
+                    </li>
+                    <li><input name="" type="text" placeholder="籍贯" /></li><li class="gap"><input type="text" placeholder="目前所在城市" /></li>
+                  </ul>
+                  <p class="grjj">个人简介</p>
+                  <textarea name="" cols="" rows="">请用一句话来介绍自己</textarea>
+                  <div class="btn">
+                  	<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
+                  </div>
+                </div>
+                <!--个人信息保存后
+                <div class="grxx_box">
+                	<ul>
+                        <li><p>姓名：<span>张小花</span></p></li>
+                        <li class="gap"><p>性别：<span>男</span></p></li>
+                        <li><p>年龄：<span>24</span></p></li><li class="gap"><p>身高：<span>178cm</span></p></li>
+                        <li><p>民族：<span>汉族</span></p></li>
+                        <li class="gap"><p>状况：<span>未婚</span></p></li>
+                        <li><p>籍贯：<span>广东广州</span></p></li><li class="gap"><p>所在城市：<span>广州</span></p></li>
+                    </ul>
+                </div>
+                -->
+            </div>
+            <div class="jianli_list">
+            	<h1 id="a2" class="jyxx">教育信息<span style="display:none"><a href="#">编辑</a></span></h1>
+                <div class="jyxx_box">
+                	<ul>
+                    	<li class="f1"><input name="" type="text" placeholder="学校名称" /></li>
+                        <li class="f2">
+                        	<div id="sp_search3" class="search1" onclick="xuanze(3,event)">
+                        	<span class="xiala">本科</span>
+                            <div class="sch_sel_m" style="display: none;" id="dd3">
+								<a href="javascript:void(0)">本科</a>
+                                <a href="javascript:void(0)">专科</a>
+                                <a href="javascript:void(0)">硕士</a>
+                                <a href="javascript:void(0)">博士</a>
+                                <a href="javascript:void(0)">中专</a>
+                                <a href="javascript:void(0)">高中</a>
+							</div>
+                            </div>
+                        </li>
+                        <li class="f3"><input name="" type="text" placeholder="专业" /></li>
+                        <li class="f2"><span class="xiala2">入学年份</span></li><li class="f3"><span class="xiala2">就读年级</span></li>
+                        <li class="f1"><input name="" type="text" placeholder="学校地址" /></li>
+                    </ul>
+                    <div class="btn">
+                  		<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
+                  	</div>
+                </div>
+                <!--教育信息保存后
+                <div class="jyxx">
+                	<ul>
+                    	<li class="f1"><p>学校名称：<span>中山大学</span></p></li>
+                        <li class="f2"><p>学历：<span>本科</span></p></li>
+                        <li class="f3"><p>专业：<span>计算机</span></p></li>
+                        <li class="f2"><p>入学年份：<span>2015</span></p></li><li class="f3"><p>年级：<span>大一</span></p></li>
+                        <li class="f1"><p>学校地址：<span>广东省广州市中山大学</span></p></li>
+                    </ul>
+                </div>
+                -->
+            </div>
+            <div class="jianli_list">
+            	<h1 id="a3" class="lxfs">联系方式<span style="display:none"><a href="#">编辑</a></span></h1>
+                <div class="lxfs_box">
+                	<ul>
+                    	<li><input name="" type="text" placeholder="QQ" /></li>
+                        <li><input name="" type="text" placeholder="联系电话" /></li>
+                        <li><input name="" type="text" placeholder="联系邮箱" /></li>
+                    </ul>
+                    <div class="btn">
+                  		<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
+                  	</div>
+                </div>
+                <!--联系方式保存后
+                <div class="lxfs_box">
+                	<ul>
+                    	<li><p>QQ：<span>594194058</span></p></li>
+                        <li><p>手机：<span>15625126498</span></p></li>
+                        <li><p>邮箱：<span>594194058@qq.com</span></p></li>
+                    </ul>
+                </div>
+                -->
+            </div>
+            <div class="jianli_list">
+           	  <h1 id="a4" class="qzyx">求职意向<span style="display:none"><a href="#">编辑</a></span></h1>
+                <div class="qzyx_box">
+                	<ul>
+                		<li class="gap"><input type="text" value="网页设计" /></li>
+                        <li><p>请填写</p></li>
+                        <li><a href="#"><img src="images/tianjia.jpg" width="140" height="48" /></a></li>
+                        <li class="gap"><a href="#"><img src="images/tianjia.jpg" width="140" height="48" /></a></li>
+                        <li><a href="#"><img src="images/tianjia.jpg" width="140" height="48" /></a></li>
+                        <li><a href="#"><img src="images/tianjia.jpg" width="140" height="48" /></a></li>
+                    </ul>
+                    <div class="btn">
+                  		<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
+                  	</div>
+                </div>
+                <!--求职意向保存后
+                <div class="qzyx_box">
+                	<ul>
+                		<li class="gap"><input type="text" value="网页设计" disabled="disabled" /></li>
+                        <li><input type="text" value="平面设计师" disabled="disabled" /></li>
+                        <li><input type="text" value="平面设计师" disabled="disabled" /></li>
+                        <li class="gap"><input type="text" value="平面设计师" disabled="disabled" /></li>
+                        <li><input type="text" value="平面设计师" disabled="disabled" /></li>
+                        <li><input type="text" value="平面设计师" disabled="disabled" /></li>
+                    </ul>
+                </div>
+                -->
+            </div>
+            <div class="jianli_list">
+            	<h1 id="a5" class="hjjl">获奖经历<span style="display:none"><a href="#">编辑</a></span></h1>
+                <div class="hjjl_box">
+                	<ul>
+                    	<li><input type="text" placeholder="获奖名称" /></li><li><input type="text" placeholder="获奖时间(如2015.01.01)" /></li>
+                        <li class="del"><img src="images/del.jpg" width="18" height="18" /></li>
+                    </ul>
+                    <p class="add"><span>添加一项</span></p>
+                    <div class="btn">
+                  		<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
+                  	</div>
+                </div>
+                <!--获奖经历保存后
+                <div class="hjjl_main">
+                    <ul>
+                    <li><h1>三好学生</h1><p>2012.05.12</p></li>
+                    <li><h1>优秀班干部</h1><p>2012.04.15</p></li>
+                    <li><h1>优秀党员</h1><p>2012.04.15</p></li>
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+                -->
+            </div>
+            <div class="jianli_list">
+            	<h1 id="a6" class="gzjl">工作经历<span style="display:none"><a href="#">编辑</a></span></h1>
+                <div class="gzjl_box">
+                	<ul>
+                    	<li><input name="" type="text" placeholder="公司" /></li>
+                        <li><input name="" type="text" placeholder="职位" /></li>
+                    </ul>
+                    <div class="zzsj">
+                    	<span>在职时间</span><div class="shijian">2015.05</div><div class="shijian">2015.08</div>
+                    </div>
+                    <p class="gznr">工作内容</p>
+                    <textarea name="" cols="" rows="">请仔细描述你的工作内容</textarea>
+                    <p class="add"><span>添加一项</span></p>
+                    <div class="btn">
+                  		<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
+                  	</div>
+                </div>
+                <!--工作经历保存后
+                <div class="gzjl_box_save">
+            	<ul>
+                	<li>
+                    	<div class="dian"></div>
+                        <div class="del"><a href="#"></a></div>
+                    	<div class="l">
+                        	<h1>2012.06-</h1><p>2012.08</p>
+                        </div>
+                        <div class="r">
+                        	<h1>行政运营助理</h1>
+                            <span>唯品会(中国)有限公司</span>
+                            <p>该职位的职责是协调部门内部的日常行政事务，以确保部门各项常规事务顺利开展；同时，协助项目负责人处理项目相关的运营事务，以确保项目顺利实施</p>
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="dian"></div>
+                        <div class="del"><a href="#"></a></div>
+                    	<div class="l">
+                        	<h1>2011.08-</h1><p>2011.10</p>
+                        </div>
+                        <div class="r">
+                        	<h1>游戏运营实习生</h1>
+                            <span>网易公司</span>
+                            <p>名校毕业，专业对口，颜指高，身材好？那都不是事儿！！<br /> 
+要得是你 狂热跳动的心，勇往无前的拼，踏实沉稳的干！</p>
+                        </div>
+                    </li>
+                    <li style="padding-bottom:10px">
+                    	<div class="dian"></div>
+                        <div class="del"><a href="#"></a></div>
+                    	<div class="l">
+                        	<h1>2010.07-</h1><p>2010.12</p>
+                        </div>
+                        <div class="r">
+                        	<h1>产品运营实习生</h1>
+                            <span>3G门户网</span>
+                            <p>1.APP爱好者，对Android系统有一定理解；<br /> 
+2.熟悉使用PS，以及WORD,EXCEL等常用办公软件； <br />3.具有工作主动自觉性和较快的适应工作能力，具有团队精神； </p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+            </div>
+            -->
+            </div>
+            <div class="jianli_list">
+            	<h1 id="a7" class="scjn">擅长技能<span style="display:none"><a href="#">编辑</a></span></h1>
+              	<div class="scjn_box">
+                	<div class="xiangmu">
+                    	<span class="jnmc"><input type="text" placeholder="技能名称" /><span class="del"><img src="images/del.jpg" width="18" height="18" /></span></span>
+                        <ul>
+                        	<li><a onclick="ChangeJn(0)" class="active">了解</a></li><li><a onclick="ChangeJn(1)">熟练</a></li><li><a onclick="ChangeJn(2)">掌握</a></li><li><a onclick="ChangeJn(3)">精通</a></li><li><a onclick="ChangeJn(4)">专家</a></li>
+                        </ul>
+                  	</div>
+                  	<p class="add"><span>添加一项</span></p>
+                  	<div class="btn">
+                  		<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
+                  	</div>
+                </div>
+                <!--擅长技能保存后
+                <div class="scjn_box_save">
+                  <dl>
+                      <dd><img src="images/zhuanjia.jpg" width="118" height="118" /></dd>
+                      <dt>Photoshop</dt>
+                  </dl>
+                  <dl>
+                      <dd><img src="images/jingtong.jpg" width="118" height="118" /></dd>
+                      <dt>Illustrator</dt>
+                  </dl>
+                  <dl style="padding-right:0">
+                      <dd><img src="images/zhangwo.jpg" width="118" height="118" /></dd>
+                      <dt>Flash</dt>
+                  </dl>
+              </div>-->
+            </div>
+            <div class="add_list"></div>
+        </div>
+        <div id="right" class="right">
+       	  	<div id="right_top" class="right_top">
+           		<h1>你的资料完善度是<span class="percent">75%</span></h1><span><a href="#">预览简历</a></span>
+                <div class="gray_line"></div><div style="width:75%" class="blue_line"></div>
+          	</div>
+            <div class="right_main">
+            	<ul>
+            		<li class="a1"><a href="#a1" onclick="ChangeLi('0')" class="active">个人信息</a></li>
+                    <li class="a2"><a href="#a2" onclick="ChangeLi('1')">教育信息</a></li>
+                    <li class="a3"><a href="#a3" onclick="ChangeLi('2')">联系方式</a></li>
+                    <li class="a4"><a href="#a4" onclick="ChangeLi('3')">求职意向</a></li>
+                    <li class="a5"><a href="#a5" onclick="ChangeLi('4')">获奖经历</a></li>
+                    <li class="a6"><a href="#a6" onclick="ChangeLi('5')">工作经历</a></li>
+                    <li class="a7"><a href="#a7" onclick="ChangeLi('6')">擅长技能</a></li>
+            	</ul>
+                <div class="left_line"></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<script>
+/*$('#sp_search1').click(function(event)
+	{
+		$('#dd1').toggle();
+		event.stopPropagation();
+});
+	$('#sp_search1 a').click(function()
+	{
+		$('#sp_search1>span').text($(this).text());
+	});
+
+	$(document).click(function(e)
+	{
+		$('#dd1').hide();
+	});*/
+
+function xuanze(i,event){
+
+		$('#dd'+i).toggle();
+		event.stopPropagation();
+	
+	$('#sp_search'+i).find('a').click(function()
+	{
+		$('#sp_search'+i).children('span').text($(this).text());
+	});
+
+	$(document).click(function(e)
+	{
+		$('#dd'+i).hide();
+	});	
+}
+</script>
+</body>
+</html>
