@@ -488,7 +488,7 @@ select {color:#000000;font:12px Arial, Helvetica, sans-serif;}
 .grxx_main p{width:305px; float:left; height:55px; line-height:55px; font-family:"微软雅黑"; font-size:16px; color:#aaa; padding-left:5px}
 .grxx_main p.long{width:615px}
 .grxx_main p span{color:#666}
-.qyjs_main{width:620px; padding-top:25px}
+.qyjs_main{padding-top:25px}
 .qyjs_main p{line-height:42px; font-size:16px; color:#666666; text-indent:2em}
 .lxfs_main{width:620px; height:165px; padding-top:25px}
 .lxfs_main p{width:615px; float:left; height:55px; line-height:55px; font-family:"微软雅黑"; font-size:16px; color:#aaa; padding-left:5px}
@@ -1163,7 +1163,7 @@ img{-ms-interpolation-mode:bicubic}
 .scjn_box_save dl dt{width:140px; height:68px; line-height:68px; text-align:center; font-size:17px; color:#333; font-weight:bold;  text-transform:uppercase}
 .add_list{width:540px; height:300px}
 .jianli_list h1{position:relative}
-.jianli_list h1 span{position:absolute; top:18px; right:17px}
+.jianli_list h1 span{position:absolute; top:16px; right:17px}
 .jianli_list h1 span a{font-size:16px; color:#ff7200; font-weight:normal}
 
 /*--------------------qyjj_save------------*/

@@ -10,13 +10,14 @@
 <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 function ChangeLi(now){
-	for(i=0; i<=3; i++)
+	for(i=0; i<=2; i++)
 	{
 		//$(".right_main ul li").eq(i).children("a").removeClass("active");
 		$(".right_main ul li").children("a").each(function(){$(this).removeClass("active");})
 	}
 	$(".right_main ul li").eq(now).children("a").addClass("active");
 	var a=now*60+60+"px";
+	//$(".left_line").css("top",a);
 	$(".left_line").animate({top:a},"300");
 	}
 window.onscroll = function(){
@@ -28,7 +29,7 @@ window.onscroll = function(){
 	else{
 		obj.removeClass('addfix');
 		}
-		/*for(now=1; now<=4; now++){
+		/*for(now=1; now<=3; now++){
 		
 			var b="a"+now;
 			var y=parseInt($(document).scrollTop()-document.getElementById(b).offsetTop);
@@ -84,13 +85,13 @@ window.onscroll = function(){
         <div class="genghuan"><span>更换</span><a><input type="file" name="uploadFile" /></a></div>
     </div>
     <div class="jianli_jieshao">
-    	<input type="text" placeholder="一句话说明您的企业理念，30字以内" />
+    	<input type="text" placeholder="请输入学校校训" />
         <span><a class="baocun">保存</a></span>
         <span><a class="quxiao">取消</a></span>
     </div>
     <div class="jianli_jieshao_save" style="display:none">
-        <h1>广州果笔科技有限公司</h1>
-        <p>”找工作，上快点优职！打造大学生服务生态系统“</p>
+        <h1>中山大学就业指导中心</h1>
+        <p>广东高校排名第一</p>
         <div class="edit"><a href="#">编辑</a></div>
     </div>
     <div class="jianli_main">
@@ -99,11 +100,8 @@ window.onscroll = function(){
         		<h1 id="a1" class="jbxx">基本信息<span style="display:none"><a href="#">编辑</a></span></h1>
                 <div class="jbxx_box">
                 	<ul>
-                    	<li class="f1"><input name="" type="text" placeholder="百胜集团" /></li>
-                        <li class="f2"><span class="xiala">行业</span></li><li class="f3"><span class="xiala">性质</span></li>
-                        <li class="f4"><input name="" type="text" placeholder="人数规模" /></li>
-                        <li class="f4"><input name="" type="text" placeholder="公司地址" /></li>
-                        <li class="f4"><input name="" type="text" placeholder="营业执照编号" /></li>
+                        <li class="f4"><input name="" type="text" placeholder="学校名称" /></li>
+                        <li class="f4"><input name="" type="text" placeholder="就业办或学校地址" /></li>
                         <li class="f4"><input name="" type="text" placeholder="官方网站" /></li>
                     </ul>
                     <div class="clear"></div>
@@ -114,12 +112,9 @@ window.onscroll = function(){
                 <!--基本信息保存后
                 <div class="jbxx_box">
                 	<ul>
-                    	<li class="f1"><p>企业名称：<span>百姓集团</span></p></li>
-                        <li class="f2"><p>行业：<span>互联网</span></p></li><li class="f3"><p>性质：<span>外企</span></p></li>
-                        <li class="f4"><p>人数规模：<span>5000人以上</span></p></li>
-                        <li class="f4"><p class="long">公司地址：<span>广州市天河区科韵路</span></p></li>
-                        <li class="f4"><p class="long">营业执照编号：<span>5882654556</span></p></li>
-                        <li class="f4"><p class="long">官方网站：<span>www.baidu.com</span></p></li>
+                        <li class="f4"><p>学校名称：<span>中山大学</span></p></li>
+                        <li class="f4"><p>学校地址：<span>广州市新港西路135号</span></p></li>
+                        <li class="f4"><p>官方网站：<span>www.baidu.com</span></p></li>
                     </ul>
                     <div class="clear"></div>
                 </div>
@@ -150,84 +145,24 @@ window.onscroll = function(){
             </div>
             
             <div class="jianli_list">
-            	<h1 id="a3" class="qyjs">企业介绍<span style="display:none"><a href="#">编辑</a></span></h1>
+            	<h1 id="a3" class="qyjs">就业办介绍<span style="display:none"><a href="#">编辑</a></span></h1>
                 <div class="qyjs_box">
                 	
-                    <p>公司详细介绍</p>
+                    <p>就业办详细介绍</p>
                     <textarea name="" cols="" rows="">请填写</textarea>
                     <div class="btn">
                   		<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
                   	</div>
                 </div>
-                <!--企业介绍保存后
+                <!--就业办介绍保存后
                 <div class="qyjs_main">
-                    <p>百胜餐饮集团中国事业部是百胜全球餐饮集团中国总部，于1993年在上海成立。截止2012年12月底，中国百胜在全国拥有超过5200家餐厅，其中包括超过4200家肯德基、超过800家必胜客、近450家小肥羊、150余家必胜宅急送及近30家东方既白餐厅，员工人数超过46万。2012年，中国百胜保持快速发展势头，全年开出889家新店。中国百胜已经成为百胜餐饮集团在全球发展最快、增长最迅速的市场。</p>
-                    <p>百胜餐饮集团是全球餐厅网络最大的餐饮集团，在全球超过125个国家和地区拥有39,000多家连锁餐厅, 员工人数150多万。2012年，百胜餐饮集团的收入超过130亿美元，百胜餐饮集团旗下肯德基、必胜客和塔可钟三个餐饮品牌分别在烹鸡、比萨、墨西哥风味食品连锁餐饮领域居全球领导地位。</p>
-                    <p>百胜餐饮（广东）有限公司，隶属于百胜餐饮集团中国事业部，负责管辖广东省内所有地区。近年来，百胜餐饮集团在广东一直保持良好的发展态势，开店已经遍布广东省所有地级城市，至今在广东省已成功开设超过500家餐厅。广东已经成为百胜最重要的区域市场之一。
-    </p>
+                    <p>中山大学（Sun Yat-sen University），简称中大，是中华人民共和国教育部直属的一所综合性重点大学，是国家211工程、985工程建设院校，入选“珠峰计划”、“111计划”、“千人计划”、“卓越法律人才教育培养计划”、“卓越医生教育培养计划”，为中管副部级大学，设有研究生院。中山大学由孙中山先生创立于1924年，[1] 初名国立广东大学，位于广东广州，后为纪念孙中山先生，学校于1926年定名为 “国立中山大学”。今日的中山大学，由1952年院系调整后分设的中山大学和中山医科大学于2001年10月合并而成。截至2013年，中山大学有全日制学生50039人，其中本科生32563人，硕士研究生12349人，博士研究生5127人[2] 。 </p>
+                    <p>中山大学（Sun Yat-sen University），简称中大，是中华人民共和国教育部直属的一所综合性重点大学，是国家211工程、985工程建设院校，入选“珠峰计划”、“111计划”、“千人计划”、“卓越法律人才教育培养计划”、“卓越医生教育培养计划”，为中管副部级大学，设有研究生院。中山大学由孙中山先生创立于1924年，[1] 初名国立广东大学，位于广东广州，后为纪念孙中山先生，学校于1926年定名为 “国立中山大学”。今日的中山大学，由1952年院系调整后分设的中山大学和中山医科大学于2001年10月合并而成。截至2013年，中山大学有全日制学生50039人，其中本科生32563人，硕士研究生12349人，博士研究生5127人[2] 。 </p>
                 </div>
                 -->
             </div>
-            <div class="jianli_list">
-            	<h1 id="a4" class="gzjl">发展历程<span style="display:none"><a href="#">编辑</a></span></h1>
-                <div class="gzjl_box">
-                	<ul>
-                    	<li><input name="" type="text" placeholder="事件标题，10字以内" /></li>
-                        <li><input name="" type="text" placeholder="事情详细描述，30字以内" /></li>
-                    </ul>
-                    <div class="sjsj">
-                    	<div class="f1">事件时间</div>
-                        <div class="shijian"><span class="xiala">2015</span><span class="zi">年</span></div>
-                        <div class="shijian"><span class="xiala">08</span><span class="zi">月</span></div>
-                    </div>
-                    
-                    <p class="add"><span>添加一项</span></p>
-                    <div class="btn">
-                  		<input type="button" class="baocun" value="保存" /><input type="button" class="quxiao" value="取消" />
-                  	</div>
-                </div>
-                <!--发展历程保存后
-                <div class="gzjl_box_save">
-            	<ul>
-                	<li>
-                    	<div class="dian"></div>
-                        <div class="del"><a href="#"></a></div>
-                    	<div class="l">
-                        	<h1>06</h1><p>2012.08</p>
-                        </div>
-                        <div class="r">
-                        	<h1>获得B轮融资</h1>
-                            <span>获得红杉资本5000万融资</span>
-                        </div>
-                    </li>
-                    <li>
-                    	<div class="dian"></div>
-                        <div class="del"><a href="#"></a></div>
-                    	<div class="l">
-                        	<h1>24</h1><p>2011.10</p>
-                        </div>
-                        <div class="r">
-                        	<h1>获得A轮融资</h1>
-                            <span>获得红杉资本5000万融资</span>
-                        </div>
-                    </li>
-                    <li style="padding-bottom:10px">
-                    	<div class="dian"></div>
-                        <div class="del"><a href="#"></a></div>
-                    	<div class="l">
-                        	<h1>17</h1><p>2010.12</p>
-                        </div>
-                        <div class="r">
-                        	<h1>美甲帮APP上线</h1>
-                            <span>一个月内用户数突破100万</span>
-                        </div>
-                    </li>
-                </ul>
-                <div class="clear"></div>
-            </div>
-            -->
-            </div>
             <div class="add_list"></div>
+            
             
         </div>
         <div id="right" class="right">
@@ -237,10 +172,9 @@ window.onscroll = function(){
           	</div>
             <div class="right_main">
             	<ul>
-            		<li class="a8"><a href="#a1" onclick="ChangeLi('0')" class="active">企业信息</a></li>
+            		<li class="a8"><a href="#a1" onclick="ChangeLi('0')" class="active">基本信息</a></li>
                     <li class="a3"><a href="#a2" onclick="ChangeLi('1')">联系方式</a></li>
-                    <li class="a9"><a href="#a3" onclick="ChangeLi('2')">企业介绍</a></li>
-                    <li class="a6"><a href="#a4" onclick="ChangeLi('3')">发展历程</a></li>
+                    <li class="a9"><a href="#a3" onclick="ChangeLi('2')">就业办介绍</a></li>
             	</ul>
                 <div class="left_line"></div>
             </div>
@@ -250,21 +184,34 @@ window.onscroll = function(){
 </div>
 
 <script>
-function xuanze(i,event){
-
-		$('#dd'+i).toggle();
-		event.stopPropagation();
-	
-	$('#sp_search'+i).find('a').click(function()
+$('#sp_search1').click(function(event)
 	{
-		$('#sp_search'+i).children('span').text($(this).text());
+		$('#dd1').toggle();
+		event.stopPropagation();
+});
+	$('#sp_search1 a').click(function()
+	{
+		$('#sp_search1>span').text($(this).text());
 	});
 
 	$(document).click(function(e)
 	{
-		$('#dd'+i).hide();
+		$('#dd1').hide();
+	});
+$('#sp_search2').click(function(event)
+	{
+		$('#dd2').toggle();
+		event.stopPropagation();
+	});
+	$('#sp_search2 a').click(function()
+	{
+		$('#sp_search2>span').text($(this).text());
+	});
+
+	$(document).click(function(e)
+	{
+		$('#dd2').hide();
 	});	
-}
 </script>
 </body>
 </html>
