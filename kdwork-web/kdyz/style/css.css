@@ -718,13 +718,13 @@ select {color:#000000;font:12px Arial, Helvetica, sans-serif;}
 .jianli_list .jyxx_box ul li .xiala2{width:215px; float:left; height:30px; line-height:30px; font-size:16px; color:#c2c2c2; padding-left:5px; background:url(../images/xiala_btn.jpg) right center no-repeat; cursor:pointer; border-bottom:1px solid #cccccc}
 .jianli_list .jbxx_box{width:540px;}
 .jianli_list .jbxx_box ul{margin:0}
-.jianli_list .jbxx_box ul li.f1{width:540px; float:left; height:30px; padding-top:41px; border-bottom:1px solid #00aaff}
-.jianli_list .jbxx_box ul li.f2{width:220px; float:left; height:30px; padding-top:41px; border-bottom:1px solid #cccccc}
-.jianli_list .jbxx_box ul li.f3{width:220px; float:left; height:30px; padding-top:41px; border-bottom:1px solid #cccccc; margin-left:100px}
-.jianli_list .jbxx_box ul li.f4{width:540px; float:left; height:30px; padding-top:41px; border-bottom:1px solid #cccccc}
-.jianli_list .jbxx_box ul li.f1 input{width:535px; height:30px; line-height:30px; font-size:16px; color:#666666; padding-left:5px; background:none}
-.jianli_list .jbxx_box ul li.f4 input{width:535px; height:30px; line-height:30px; font-size:16px; color:#999; padding-left:5px; background:none}
-.jianli_list .jbxx_box ul li .xiala{width:215px; float:left; height:30px; line-height:30px; font-size:16px; color:#c2c2c2; padding-left:5px; background:url(../images/xiala_btn.jpg) right center no-repeat; cursor:pointer}
+.jianli_list .jbxx_box ul li.f1{width:540px; float:left; height:30px; padding-top:41px}
+.jianli_list .jbxx_box ul li.f2{width:220px; float:left; height:30px; padding-top:41px}
+.jianli_list .jbxx_box ul li.f3{width:220px; float:left; height:30px; padding-top:41px; margin-left:100px}
+.jianli_list .jbxx_box ul li.f4{width:540px; float:left; height:30px; padding-top:41px}
+.jianli_list .jbxx_box ul li.f1 input{width:535px; height:30px; line-height:30px; font-size:16px; color:#666666; padding-left:5px; background:none; border-bottom:1px solid #00aaff}
+.jianli_list .jbxx_box ul li.f4 input{width:535px; height:30px; line-height:30px; font-size:16px; color:#999; padding-left:5px; background:none; border-bottom:1px solid #cccccc}
+.jianli_list .jbxx_box ul li .xiala{width:215px; float:left; height:30px; line-height:30px; font-size:16px; color:#c2c2c2; padding-left:5px; background:url(../images/xiala_btn.jpg) right center no-repeat; cursor:pointer; border-bottom:1px solid #cccccc}
 .jianli_list .lxfs{height:22px; line-height:22px; font-weight:normal; font-family:"微软雅黑"; font-size:20px; color:#333333; padding:10px 0 16px 40px; border-bottom:1px solid #666; background:url(../images/lxfs.jpg) left 10px no-repeat}
 .jianli_list .lxfs_box{width:540px}
 .jianli_list .lxfs_box ul{margin:0; height:216px}
@@ -1154,7 +1154,7 @@ img{-ms-interpolation-mode:bicubic}
 .gzjl_box_save ul li .r span{width:351px; float:left; height:24px; line-height:24px; font-size:14px; color:#999999; font-family:"微软雅黑"; padding-bottom:10px}
 .gzjl_box_save ul li .r p{width:351px; float:left; line-height:24px; font-size:15px; color:#333; font-family:"微软雅黑";}
 .gzjl_box_save ul li .dian{width:13px; height:13px; border-radius:50%; position:absolute; background-color:#ff7200; top:18px; left:-7px}
-.gzjl_box_save ul li .del{width:18px; height:18px; position:absolute; top:12px; right:0}
+.gzjl_box_save ul li .del{width:18px; height:18px; position:absolute; top:12px; right:0; z-index:3}
 .gzjl_box_save ul li .del a{width:18px; float:left; height:18px; background:url(../images/del.jpg)}
 .gzjl_box_save ul li .del a:hover{background:url(../images/del_hover.jpg)}
 .scjn_box_save{width:540px; padding-top:55px}
@@ -1165,3 +1165,7 @@ img{-ms-interpolation-mode:bicubic}
 .jianli_list h1{position:relative}
 .jianli_list h1 span{position:absolute; top:18px; right:17px}
 .jianli_list h1 span a{font-size:16px; color:#ff7200; font-weight:normal}
+
+/*--------------------qyjj_save------------*/
+.jianli_list .jbxx_box ul li p{height:30px; line-height:30px; font-size:16px; color:#999; padding-left:5px; background:none}
+.jianli_list .jbxx_box ul li p span{color:#333}
