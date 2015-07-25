@@ -296,4 +296,8 @@ public class UserSecondaryController {
 		}
 				
 	}
+	@RequestMapping(value="/setting")
+	public String setting(){
+		return "user/setting";
+	}
 }

@@ -32,6 +32,7 @@ import org.kd.server.beans.vo.UserVo;
 import org.kd.server.common.exception.BusinessException;
 import org.kd.server.common.util.DateUtil;
 import org.kd.server.common.util.LogRecord;
+import org.kd.server.common.util.RegexUtil;
 import org.kd.server.service.DateIntervalService;
 import org.kd.server.service.EnterpriseService;
 import org.kd.server.service.MeteringModeService;
@@ -180,12 +181,11 @@ public class RecruitInfoController {
 			@RequestParam(required = false, defaultValue = "") String endTime,
 			HttpServletRequest request, @Valid RecruitInfo recruitInfo,
 			BindingResult bind) throws Exception {
-
+		
 		if (recruitInfo.getEnterprise() == null
 				|| recruitInfo.getEnterprise().getId() == null) {
 			throw new BusinessException(RetMsg.paramError, "关联企业不能为空");
 		}
-		// LogRecord.info("发布招聘信息 ：id 为  " + recruitInfo.getId());
 		User user = (User) request.getSession().getAttribute(
 				PublicInfoConfig.currentUser);
 
@@ -194,20 +194,11 @@ public class RecruitInfoController {
 		if (enterprise == null) {
 			throw new BusinessException(RetMsg.paramError, "关联企业不存在");
 		}
-
-		String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-		Pattern regex = Pattern.compile(check);
-		Matcher matcher = regex.matcher(enterprise.getEmail());
-		if (!matcher.matches()) {
-			throw new BusinessException(RetMsg.paramError, "邮箱地址不符合规范");
-
+		
+		if(!RegexUtil.isEmail(recruitInfo.getEmail())){
+			throw new BusinessException(RetMsg.paramError,"邮箱地址不符合规范");
 		}
-
-		/*
-		 * if(bind.hasErrors()){ throw new
-		 * BusinessException(RetMsg.paramError,"邮箱地址不符合规范"); }
-		 */
-
+		
 		Subject userSub = SecurityUtils.getSubject();
 
 		if (!userSub.hasRole("administrator")
@@ -300,6 +291,22 @@ public class RecruitInfoController {
 		return model;
 	}
 
+	/**
+	 * @author bojiehuang@163.com
+	 * 获取招聘信息接口
+	 * @param provinceId
+	 * @param cityId
+	 * @param districtId
+	 * @param sectionId
+	 * @param positionId
+	 * @param page
+	 * @param pageSize
+	 * @param dateIntervalId
+	 * @param model
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/search")
 	public String searchRecruitInfo(
 			@RequestParam(required = false, defaultValue = "19") Long provinceId,
@@ -335,7 +342,7 @@ public class RecruitInfoController {
 			queryConditions
 					.add(new QueryCondition("position.id=" + positionId));
 		}
-
+		queryConditions.add(new QueryCondition("enterprise.businessLicenseCheck=" + true));//只能显示认证企业发布的显示
 		if (dateIntervalId != 1) {
 			Date date = null;
 			switch (dateIntervalId) {

@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.kd.server.beans.vo.UserVo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -20,6 +23,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler"})
 public class RecruitUserResume implements Serializable{
 	
+	@Override
+	public String toString() {
+		return "RecruitUserResume [id=" + id + ", userVo=" + userVo
+				+ ", userResume=" + userResume + ", recruitInfo=" + recruitInfo
+				+ ", readed=" + readed + ", sendTime=" + sendTime + "]";
+	}
+
 	/**
 	 * 
 	 */
@@ -30,6 +40,18 @@ public class RecruitUserResume implements Serializable{
 	@Column(name="ID")
 	private Long id;
 	
+	@Transient
+	private UserVo userVo;
+	
+	 
+	public UserVo getUserVo() {
+		return userVo;
+	}
+
+	public void setUserVo(UserVo userVo) {
+		this.userVo = userVo;
+	}
+
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="USER_RESUME_ID")
 	private UserResume userResume;

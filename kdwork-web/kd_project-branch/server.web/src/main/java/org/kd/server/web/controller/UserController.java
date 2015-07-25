@@ -1,5 +1,20 @@
 package org.kd.server.web.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -18,7 +33,15 @@ import org.kd.server.common.exception.BusinessException;
 import org.kd.server.common.util.DesEncrypt;
 import org.kd.server.common.util.LogRecord;
 import org.kd.server.common.util.MD5;
-import org.kd.server.service.*;
+import org.kd.server.common.util.RegexUtil;
+import org.kd.server.service.ClientPlatformTypeService;
+import org.kd.server.service.EnterpriseService;
+import org.kd.server.service.ImageService;
+import org.kd.server.service.InfomationService;
+import org.kd.server.service.MessageTalkService;
+import org.kd.server.service.SectionService;
+import org.kd.server.service.UserResumeService;
+import org.kd.server.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,25 +50,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /*
  * zmy
@@ -79,7 +83,7 @@ public class UserController {
 
 	@Resource(name = "infomationService")
 	private InfomationService infomationService;
-
+	//测试用的，用于生成批量用户
 	@RequestMapping(value = "/hatman")
 	public void hatman() {
 		for(int j=0;j!=1000;++j){
@@ -112,17 +116,23 @@ public class UserController {
 	}
 
 	// 注册用户接口
+	/**
+	 * @author bojiehuang@163.com
+	 * @param model
+	 * @param user
+	 * @param res
+	 * @return
+	 * @throws Exception
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public Map<String, Object> register(Model model, @Valid User user,
+			@RequestParam(required = false, defaultValue = "0") String PROTO_VERSION,
 			BindingResult res) throws Exception {
 		LogRecord.info(user.getNickName() + " 注册");
-		String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-		Pattern regex = Pattern.compile(check);
-		Matcher matcher = regex.matcher(user.getEmail());
-		if (!matcher.matches()) {
+		String password = user.getPassword();
+		if (!RegexUtil.isEmail(user.getEmail())) {
 			throw new BusinessException(RetMsg.paramError, "邮箱地址不符合规范");
-
 		}
 		user.setPassword(MD5.crypt(user.getPassword()));
 		return userService.register(user);
@@ -130,6 +140,7 @@ public class UserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(
+			@RequestParam(required = false, defaultValue = "0") String PROTO_VERSION,
 			String loginName,
 			String password,
 			long clientPlatformType,
@@ -139,22 +150,27 @@ public class UserController {
 			Model model) throws Exception {
 		LogRecord.info("login....\n" + loginName + " " + " "
 				+ clientPlatformType);
+	
 		if (!request.getRequestURI().endsWith(".json")) {
 			String submitCode = WebUtils.getCleanParam(request, "validateCode");
 			if (StringUtils.isEmpty(submitCode)
 					|| !StringUtils.equals(validateCode.toLowerCase(),
 							submitCode.toLowerCase())) {
-				return "";
+				return "login";
 			}
 		}
-
+		
+		if(!PROTO_VERSION.equals("0")){
+		password =  DesEncrypt.decrypt(DesEncrypt.USER_ACCESS_TOKEN_KEY, password);
+		}
+		
 		password = MD5.crypt(password);
 
 		Subject userSub = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(loginName,
 				password);
 		token.setRememberMe(true);
-
+		System.out.println("用户名："+loginName+"用户密码："+password);
 		try {
 			userSub.login(token);
 
@@ -202,16 +218,25 @@ public class UserController {
 				map.put("user", user);
 
 				model.addAttribute("result", map);
+				
 			}
-			return "";
-
+			
+			return "PC/index";
 		} catch (AuthenticationException e) {
 			token.clear();
 			throw e;
 		}
 
 	}
-
+	@RequestMapping(value="/loginjsp")
+	public String login(){
+		return "login";
+	}
+	@RequestMapping(value="/registerjsp")
+	public String register(){
+		return "register";
+	}
+	//刷新用户信息
 	@RequiresAuthentication
 	@ResponseBody
 	@RequestMapping(value = "/freshenUserInfo", method = RequestMethod.POST)

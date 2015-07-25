@@ -7,6 +7,13 @@ public class UserVo {
 	private int sex;
 	private String easemobName;
 
+	@Override
+	public String toString() {
+		return "UserVo [id=" + id + ", nickName=" + nickName + ", headImage="
+				+ headImage + ", sex=" + sex + ", easemobName=" + easemobName
+				+ "]";
+	}
+
 	public UserVo(Long id, String nickName, String headImage,
 			int sex, String easemobName) {
 		super();

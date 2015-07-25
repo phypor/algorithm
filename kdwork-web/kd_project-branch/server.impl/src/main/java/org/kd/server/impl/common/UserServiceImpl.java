@@ -53,12 +53,12 @@ public class UserServiceImpl extends DefultBaseService implements UserService{
 			return map;
 		}
 		
-		us = (User) baseService.getUniqueResultByJpql("from User as o where o.nickName=?0", user.getNickName());
+/*		us = (User) baseService.getUniqueResultByJpql("from User as o where o.nickName=?0", user.getNickName());
 		if(us!=null){
 			map.put("status", String.valueOf(RetMsg.registerExistsNickNameError));
 			map.put("msg", RetMsg.registerExistsNickNameErrorMsg);
 			return map;
-		}
+		}*/
 
 		String roleName = "";
 		switch (user.getUserType()) {

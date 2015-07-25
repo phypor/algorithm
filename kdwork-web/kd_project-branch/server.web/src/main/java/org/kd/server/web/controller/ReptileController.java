@@ -14,21 +14,26 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 
-import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -45,6 +50,7 @@ import org.kd.server.beans.entity.ProvinceCityArea;
 import org.kd.server.beans.entity.QuantityScale;
 import org.kd.server.beans.entity.RecruitInfo;
 import org.kd.server.beans.entity.Section;
+import org.kd.server.beans.vo.QueryCondition;
 import org.kd.server.common.util.JsonUtil;
 import org.kd.server.common.util.LogRecord;
 import org.kd.server.common.util.MD5;
@@ -73,14 +79,23 @@ import org.phypor.kdcrawler.GanJiQJXiaoShouSingeCrawler;
 import org.phypor.kdcrawler.HtmlProcess;
 import org.phypor.kdcrawler.TextProcess;
 import org.phypor.kdcrawler.UnivsSingeCrawler;
+import org.phypor.kdcrawler.XuanjianghuiSingeCrawler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
+import freemarker.template.MalformedTemplateNameException;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
 
 /**
  * 
@@ -89,6 +104,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  */
 @Controller
 public class ReptileController {
+	
 	@Resource(name = "recruitInfoService")
 	private RecruitInfoService recruitInfoService;
 	@Resource(name = "infomationService")
@@ -116,60 +132,14 @@ public class ReptileController {
 	HttpServletRequest request;
 	@Autowired
 	HttpServletResponse response;
-
+	 
 	@ResponseBody
 	@RequestMapping("/test")
-	public String test() throws IOException {
-		String html = readHtmlModel();
-		return new String(html.getBytes("UTF-8"), "8859_1");
-		/*
-		 * return this.getClass().getClassLoader().getResource("/area.txt")
-		 * .getPath();
-		 */
+	public String test()   {
+			return "xxx";
 	}
 
-	public File CreateNewsHtmlFile(String fileName) {
-		File path = new File("/usr/share/nginx/html/kd_news/");
-		File dir = new File(path, fileName);
-		if (!dir.exists())
-			try {
-				dir.setWritable(true, false);
-				dir.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		return dir;
-	}
-
-	public void writeToHtmlFile(String fileName, String html) {
-		File file = CreateNewsHtmlFile(fileName + ".html");
-		FileWriter fw = null;
-		BufferedWriter writer = null;
-		try {
-			fw = new FileWriter(file);
-			writer = new BufferedWriter(fw);
-			writer.write(html);
-			writer.newLine();
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			throw new IllegalArgumentException("无法创建！！！文件");
-		} finally {
-			try {
-				if (writer != null) {
-					writer.close();
-				}
-				if (fw != null) {
-					fw.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
+	  
 	public void writeNewsData(Map<String, String> map, File fileName) {
 		if (!fileName.exists())
 			try {
@@ -270,7 +240,7 @@ public class ReptileController {
 		return retMap;
 	}
 
-	public String readHtmlModel() throws IOException {
+	public String getNewsHtmlModel() throws IOException {
 		String path = this.getClass().getClassLoader()
 				.getResource("/htmlModel.txt").getPath();
 
@@ -287,22 +257,51 @@ public class ReptileController {
 
 	@ResponseBody
 	@RequestMapping("/news")
-	public String news(@RequestParam(defaultValue = "0") String id)
-			throws IOException {
-		if (id.equals("0"))
-			return "error";
-		// {$title} {$pubdate} {$source} {$article}
-		String html = readHtmlModel();
-		Map<String, String> map = readNewsData(new File("/kdnewsdata/" + id
-				+ ".data"));
-		if (map == null)
-			return "error";
-		LogRecord.info(map.toString());
-		html = html.replace("{@title}", map.get("title"));
-		html = html.replace("{@pubdate}", map.get("pubdate"));
-		html = html.replace("{@source}", map.get("source"));
-		html = html.replace("{@article}", map.get("content"));
-		return new String(html.getBytes("UTF-8"), "8859_1");
+	public String news(@RequestParam(defaultValue = "0") String id) {
+		if(id.length() > 10){//兼容旧版的news id的访问
+			String html = "";
+			try {
+				html = getNewsHtmlModel();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Map<String,String> map = readNewsData(new File("/kdnewsdata/"+id+".data"));
+			html = html.replace("{$title}",map.get("title"));
+			html = html.replace("{$pubdate}", map.get("pubdate"));
+			html = html.replace("{$source}", map.get("source"));
+			html = html.replace("{$article}", map.get("content"));
+			try {
+				return new String(html.getBytes("UTF-8"), "8859_1");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		long l_id =  Long.valueOf(id).longValue(); 
+		if (l_id == 0)return "error";
+		Infomation infomation = null;
+		try {
+			infomation = infomationService.getById(Infomation.class, l_id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(infomation == null) return "error !";
+		String html = "";
+		try {
+			html = getNewsHtmlModel();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		html = html.replace("{$title}",infomation.getTitle());
+		html = html.replace("{$pubdate}", infomation.getCreateTime().toLocaleString());
+		html = html.replace("{$source}", infomation.getMediaPlatform());
+		html = html.replace("{$article}", infomation.getContent());
+		try {
+			return new String(html.getBytes("UTF-8"), "8859_1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return "error !";
 	}
 
 	@RequestMapping("/kd_JianJi")
@@ -594,13 +593,12 @@ public class ReptileController {
 							.toString();
 
 					// ////////////////////////////////////////////////
-					Document web_doc = createNewsWebByModel(pubdate, source,
-							content, title);
+					Document web_doc = null;
 					Elements elems = web_doc.select("div.ep-source.cDGray");
 					for (int i = 0; i != elems.size(); ++i) {
 						web_doc.select("div.ep-source.cDGray").get(i).remove();
 					}
-					writeToHtmlFile(fileName, web_doc.html());
+				/*	writeToHtmlFile(fileName, web_doc.html());*/
 					String web_url = "http://114.215.97.225:8008/kd_news/"
 							+ fileName + ".html";
 					// ////////////////////////////////////////////////
@@ -622,7 +620,7 @@ public class ReptileController {
 					// ////////////////////////////////////////////////
 					doc.getElementById("source").appendText("来源：" + source);
 					content = doc.html();
-					String image_url = getWebTitleImage(doc, fileName);
+					String image_url = "";//getWebTitleImage(doc, fileName);
 					Infomation infomation = new Infomation(0, content, web_url,
 							date, 0, source, 0, title, image_url, 1, null, null);
 					try {
@@ -638,24 +636,6 @@ public class ReptileController {
 		};
 	}
 
-	public Document createNewsWebByModel(String pubdate, String source,
-			String content, String title) {
-		String path = this.getClass().getClassLoader()
-				.getResource("/htmlModel.html").getPath();
-		Document doc = null;
-		try {
-			doc = HtmlProcess.getHtmlModelDoc(path);
-		} catch (IOException e) {
-			LogRecord.error(path + " 无效地址");
-		}
-		if (doc == null)
-			return null;
-		doc.getElementById("newsArticle").append(content);
-		doc.getElementById("art_pubdate").append(pubdate);
-		doc.getElementById("art_title").append(title);
-		doc.getElementById("art_from").append("来源:" + source + "&nbsp&nbsp");
-		return doc;
-	}
 
 	public String IMG_UPLOAD_URL = "http://120.24.223.221/getUrlImage.php";
 	public String IMG_HOST = "http://120.24.223.221/";
@@ -694,44 +674,6 @@ public class ReptileController {
 		return map;
 	}
 
-	public String getWebTitleImage(Document doc, String fileName) {
-		String image_url = "";
-		if (doc.select("img").size() != 0) {
-			String src = doc.select("img").first().absUrl("src");
-			if (!src.equals("")
-					&& !src.equals("http://www.kdwork.com/resources/images/logo.png")) {
-				try {
-					URL url = new URL(src);
-					BufferedImage bi = Thumbnails.of(url).scale(1)
-							.asBufferedImage();
-					System.out.println("img.width=" + bi.getWidth()
-							+ " img.hight=" + bi.getHeight());
-					int w = bi.getWidth();
-					int h = bi.getHeight();
-					if (h >= w) {
-						h = w * 2 / 3;
-					} else {
-						w = h * 3 / 2;
-					}
-					Thumbnails
-							.of(url)
-							.sourceRegion(Positions.CENTER, w, h)
-							.size(150, 100)
-							.keepAspectRatio(false)
-							.toFile("/usr/share/nginx/html/kd_news_images/"
-									+ fileName + ".png");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				image_url = "http://114.215.97.225:8008/kd_news_images/"
-						+ fileName + ".png";
-
-			}
-		}
-		return image_url;
-	}
-
 	/**
 	 * 不公开接口
 	 */
@@ -767,18 +709,13 @@ public class ReptileController {
 					} catch (Exception e1) {
 						return;
 					}
-
-					String content = TextProcess.preProcess(map.get("content")
-							.get(0).html());
+					String content = TextProcess.preProcess(map.get("content").get(0).html());
 					Map<String, String> tc = getWebAllImages(content);
 					content = tc.get("content");//
 					String image_url = tc.get("titleImgURL");//
-					String tmp[] = map.get("pubdate").get(0).text().trim()
-							.split(" ");
-
+					String tmp[] = map.get("pubdate").get(0).text().trim().split(" ");
 					String pubdate = tmp[3] + " " + tmp[4];//
-					SimpleDateFormat df = new SimpleDateFormat(
-							"yyyy年MM月dd日 hh:mm:ss");
+					SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
 					Date date = null;
 					try {
 						date = df.parse(pubdate);
@@ -787,25 +724,20 @@ public class ReptileController {
 						return;
 					}
 					String source = tmp[5].replaceAll("来源：", "");//
-					String fileName = new SimHash(title).simHash().toString();
-					Map<String, String> fianl_map = new HashMap<String, String>();
-					fianl_map.put("title", title);
-					fianl_map.put("content", content);
-					fianl_map.put("pubdate", pubdate);
-					fianl_map.put("source", source);
-					writeNewsData(fianl_map, new File("/kdnewsdata/" + fileName
-							+ ".data"));
-					String web_url = "http://www.kdwork.com/news?id="
-							+ fileName;
-					LogRecord.info(web_url);
+					String web_url = "http://www.kdwork.com/news?id=";
 					content = HtmlProcess.packet(content);
 					Document doc = Jsoup.parse(content);
 					doc.getElementById("source").appendText(tmp[5]);
 					content = doc.html();
-					Infomation infomation = new Infomation(0, content, web_url,
+					Infomation infomation = new Infomation(0, content, "",
 							date, 0, source, 0, title, image_url, 1, null, null);
 					try {
 						infomationService.saveOrUpadte(infomation);
+						long id = infomation.getId();
+						web_url+=id;
+						infomation.setUrl(web_url);
+						LogRecord.info(web_url);
+						infomationService.update(infomation);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -817,122 +749,47 @@ public class ReptileController {
 
 	@RequestMapping("/kd_talk")
 	public void kd_talk() {
-		try {
-			Document doc = Jsoup
-					.connect("http://m.haitou.cc/xjh/list.php")
-					.userAgent(
-							"Mozilla/5.0 (Windows NT 5.2) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.122 Safari/534.30")
-					.timeout(10000).get();
-			Elements all = doc.select("div.list_content_item");
-			if (all.size() != 0) {
-				for (int i = 0; i != all.size(); ++i) {
-					String iid = all.get(i).attr("iid");
-					String url = "http://m.haitou.cc/xjh/article.php?id=" + iid;
-
-					Document doc1 = null;
-					try {
-						doc1 = Jsoup
-								.connect(url)
-								.userAgent(
-										"Mozilla/5.0 (Windows NT 5.2) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.122 Safari/534.30")
-								.timeout(10000).get();
-					} catch (IOException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
+		String Regex="^http://bbs.xuanjianghui.com.cn/thread.*";
+	     new XuanjianghuiSingeCrawler(Regex, new String[]{"http://bbs.xuanjianghui.com.cn/forum-66-1.html"} ){
+			@Override
+			public void handle(String href) {
+			 System.out.println(href);
+			 Document doc = getHtmlDocument(href);
+			 Date date = null;
+			 String content = doc.select("div.pct").first().html();
+			 String title = doc.getElementById("thread_subject").text().trim();
+			 Pattern p = Pattern.compile("[0-9]{4}[年|\\-|/][0-9]{1,2}[月|\\-|/][0-9]{1,2}");
+				Matcher m = p.matcher(doc.select("div.pct").text());
+				if (m.find()) {
+					if (!"".equals(m.group())) {
+						String sdate = m.group();
+						sdate = sdate.replaceAll("年", "-");
+						sdate = sdate.replaceAll("月", "-");
+						sdate = sdate.replaceAll("/", "-");
+						SimpleDateFormat df = new SimpleDateFormat(
+								"yyyy-MM-dd");	 
+					  try {
+						date = df.parse(sdate);
+					} catch (ParseException e) {
+						e.printStackTrace();
 					}
-					if (doc1 == null)
-						return;
-					Elements divs = doc1.select("div.article_content");
-					if (divs.size() == 0)
-						return;
-					Element art_div = divs.first();
-					Element r = art_div.select("div").first();
-					String time = "";
-					String source = "";
-					String title = "";
-					int index = 0;
-					for (Element e : r.select("span")) {
-						String tmp = e.text().trim();
-						if (index == 0)
-							title = tmp;
-						if (tmp.contains("时间")) {
-							time = e.text().trim();
-							time = time.replaceAll("时间：", "");
-							/*
-							 * time = time.split(" ")[0] + " " +
-							 * time.split(" ")[1];
-							 */
+					String web_url = "http://www.kdwork.com/news?id=";
+					String source = null;
+					Infomation infomation = new Infomation(0, content, web_url,
+								date, 0, source, 0, title, "", 2, null, null);
+						try {
+							infomationService.saveOrUpadte(infomation);
+							web_url += infomation.getId();
+							LogRecord.info(web_url);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-						if (tmp.contains("学校")) {
-							source = e.text().trim();
-							source = source.replaceAll("学校：", "");
-						}
-						index++;
+					  
 					}
-
-					/*
-					 * SimpleDateFormat df = new SimpleDateFormat(
-					 * "yyyy-MM-dd hh:mm:ss"); Date date = null;
-					 */
-					String text = HtmlProcess.packet(art_div.html());
-					doc = Jsoup.parse(text);
-					for (Element e : doc.select("span")) {
-						if (e.html().contains("以上内容已自动由海投网转码")) {
-							e.remove();
-						}
 					}
-
-					for (Element e : doc.select("a")) {
-						if (e.html().contains("关闭窗口")) {
-							e.remove();
-						}
-					}
-
-					for (Element elem : doc.select("table")) {
-						elem.removeAttr("style");
-						elem.attr("maxWidth", "100%");
-					}
-					text = doc.html();
-					text = text.replaceFirst(title, "");
-					/*
-					 * try { date = df.parse(time); } catch (ParseException e1)
-					 * { // TODO Auto-generated catch block
-					 * e1.printStackTrace(); }
-					 */
-					String fileName = new SimHash(title, 128).simHash()
-							.toString();
-					Document tmp_doc = createNewsWebByModel(time, "", divs
-							.first().html().replaceAll(title, ""), title);
-					for (Element e : tmp_doc.select("span")) {
-						if (e.text().trim().contains("以上内容已自动由海投网转码"))
-							e.remove();
-					}
-
-					for (Element e : tmp_doc.select("a")) {
-						if (e.html().contains("关闭窗口")) {
-							e.remove();
-						}
-					}
-
-					url = "http://114.215.97.225:8008/kd_news/" + fileName
-							+ ".html";
-					writeToHtmlFile(fileName, tmp_doc.html());
-					Infomation infomation = new Infomation(0, Jsoup.parse(text)
-							.html(), url, null, 0, "", 0, title, null, 2, null,
-							null);
-					try {
-						if (infomationService.saveOrUpadte(infomation) == false) {
-							System.out.println("������Ϣ...");
-						}
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}// for
-			}// if
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			}
+	    	
+	    };
 	}
 
 	@RequestMapping("/ganJiQJKuaiJISingeCrawler")
@@ -1049,6 +906,8 @@ public class ReptileController {
 		};
 	}
 
+	 
+	
 	public void addRecruitInfo(Document doc, GanJiCrawlerUtils gcu,
 			String JobDis, String JobName, long sessionid) {
 		try {

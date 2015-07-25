@@ -1,19 +1,32 @@
 package org.kd.server.beans.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.kd.server.beans.vo.UserVo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 /**
  * The persistent class for the user database table.
@@ -24,43 +37,7 @@ import java.util.Set;
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class User implements Serializable {
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", sex=" + sex + ", easemobName="
-				+ easemobName + ", easemobKey=" + easemobKey + ", email="
-				+ email + ", isValidateEmail=" + isValidateEmail
-				+ ", mobilePhone=" + mobilePhone + ", backgroundImage="
-				+ backgroundImage + ", headImage=" + headImage
-				+ ", unreadCircleInfoNum=" + unreadCircleInfoNum
-				+ ", friendsNum=" + friendsNum + ", indiviSign=" + indiviSign
-				+ ", collectionNum=" + collectionNum + ", unreadTalkCount="
-				+ unreadTalkCount + ", resumeIntrodPercent="
-				+ resumeIntrodPercent + ", enterpriseInfoPercent="
-				+ enterpriseInfoPercent + ", unreadMessageNum="
-				+ unreadMessageNum + ", unreadCircleInfoCount="
-				+ unreadCircleInfoCount + ", unreadResumeCount="
-				+ unreadResumeCount + ", lastAddressCoordinates="
-				+ lastAddressCoordinates + ", lastAddressName="
-				+ lastAddressName + ", messageShock=" + messageShock
-				+ ", messageVoice=" + messageVoice + ", messageNoticeShow="
-				+ messageNoticeShow + ", firnedCircleRenewRemind="
-				+ firnedCircleRenewRemind + ", logoutStillPush="
-				+ logoutStillPush + ", clientPlatformType="
-				+ clientPlatformType + ", addMeNeedValid=" + addMeNeedValid
-				+ ", showMeVicinity=" + showMeVicinity
-				+ ", strangerLookResume=" + strangerLookResume
-				+ ", minTrafficImg=" + minTrafficImg + ", lastLoginTime="
-				+ lastLoginTime + ", loginName=" + loginName + ", nickName="
-				+ nickName + ", password=" + password + ", pushEnable="
-				+ pushEnable + ", registerTime=" + registerTime + ", userType="
-				+ userType + ", enterprises=" + enterprises
-				+ ", enterpriseDiscusses=" + enterpriseDiscusses
-				+ ", infomationDiscusses=" + infomationDiscusses
-				+ ", alumniEnterprises=" + alumniEnterprises + ", userCircles="
-				+ userCircles + ", userResumes=" + userResumes + ", roles="
-				+ roles + ", friendCircles=" + friendCircles
-				+ ", recruitInfos=" + recruitInfos + "]";
-	}
+	 
 
 	/**
 	 * 
@@ -76,6 +53,30 @@ public class User implements Serializable {
 
 	@Column(name = "SEX")
 	private int sex;
+	
+	@Column(name ="RESUME_URL")
+	private String resumeUrl;
+	
+	
+	public String getResumeUrl() {
+		return resumeUrl;
+	}
+
+	public void setResumeUrl(String resumeUrl) {
+		this.resumeUrl = resumeUrl;
+	}
+
+	@Transient
+	private UserVo userVo;
+	
+	public UserVo getUserVo() {
+		userVo = new UserVo(id, nickName, headImage, sex, easemobName);
+		return  userVo;
+	}
+
+	public void setUserVo(UserVo userVo) {
+		this.userVo = userVo;
+	}
 
 	@Column(name = "EASEMOB_NAME")
 	private String easemobName;

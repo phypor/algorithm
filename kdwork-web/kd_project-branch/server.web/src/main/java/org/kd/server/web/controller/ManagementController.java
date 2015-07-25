@@ -77,4 +77,5 @@ public class ManagementController {
 		
 		return "management";
 	}
+	
 }

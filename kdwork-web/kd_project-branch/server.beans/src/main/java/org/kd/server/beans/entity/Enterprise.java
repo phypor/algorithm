@@ -1,15 +1,25 @@
 package org.kd.server.beans.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.kd.server.beans.vo.UserVo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.List;
 
 /**
  * The persistent class for the enterprise database table.
@@ -21,26 +31,7 @@ import java.util.List;
 public class Enterprise implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	public String toString() {
-		return "Enterprise [id=" + id + ", logoImage=" + logoImage + ", name="
-				+ name + ", phone=" + phone + ", detailedAddress="
-				+ detailedAddress + ", email=" + email + ", websiteAddress="
-				+ websiteAddress + ", businessLicenseCheck="
-				+ businessLicenseCheck + ", businessLicenseImage="
-				+ businessLicenseImage + ", clickLikeNum=" + clickLikeNum
-				+ ", contacts=" + contacts + ", licenseNo=" + licenseNo
-				+ ", enterprisePhil=" + enterprisePhil + ", schoolMotto="
-				+ schoolMotto + ", enterpriseDesc=" + enterpriseDesc
-				+ ", hash=" + hash + ", enterpriseType=" + enterpriseType
-				+ ", companyNature=" + companyNature + ", industry=" + industry
-				+ ", province=" + province + ", city=" + city + ", district="
-				+ district + ", quantityScale=" + quantityScale
-				+ ", recruitInfo=" + recruitInfo + ", user=" + user
-				+ ", userVo=" + userVo + ", enterpriseComplains="
-				+ enterpriseComplains + ", trainingInfos=" + trainingInfos
-				+ ", recruitInfos=" + recruitInfos + "]";
-	}
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +41,20 @@ public class Enterprise implements Serializable {
 	@Column(name = "LOGO_IMAGE")
 	private String logoImage;
 	
+	@Column(name = "CREATE_TIME")
+	private Date createTime;
+	
+	@Column(name = "REFRESH_TIME")
+	private Date refreshTime;
+	
+	public Date getRefreshTime() {
+		return refreshTime;
+	}
+
+	public void setRefreshTime(Date refreshTime) {
+		this.refreshTime = refreshTime;
+	}
+
 	@Column(name = "NAME")
 	private String name;
 
@@ -94,6 +99,17 @@ public class Enterprise implements Serializable {
 	@Column(name = "HASH")
 	private String hash;
 
+	@Column(name = "ETYPE",columnDefinition="INT default 2")
+	private int eType;
+	
+	public int geteType() {
+		return eType;
+	}
+
+	public void seteType(int eType) {
+		this.eType = eType;
+	}
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ENTERPRISE_TYPE")
@@ -119,6 +135,16 @@ public class Enterprise implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DISTRICT_ID")
 	private ProvinceCityArea district;
+
+	
+	
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
 	// bi-directional many-to-one association to QuantityScale
 	@ManyToOne(fetch = FetchType.LAZY)

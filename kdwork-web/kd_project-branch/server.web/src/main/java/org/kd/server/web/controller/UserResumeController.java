@@ -3,6 +3,8 @@ package org.kd.server.web.controller;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.LogRecord;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -36,7 +37,10 @@ import org.kd.server.beans.vo.Pagination;
 import org.kd.server.beans.vo.QueryCondition;
 import org.kd.server.common.exception.BusinessException;
 import org.kd.server.common.util.DateUtil;
+import org.kd.server.common.util.InetAddressUtil;
 import org.kd.server.common.util.MailSender;
+import org.kd.server.common.util.StringUtil;
+import org.kd.server.common.util.TempletParseUtil;
 import org.kd.server.service.DegreesService;
 import org.kd.server.service.EnterpriseService;
 import org.kd.server.service.GradeService;
@@ -108,7 +112,7 @@ public class UserResumeController {
 
 		return "userResume/userResumeEdit";
 	}
-
+	//添加用户简历
 	@ResponseBody
 	@RequiresAuthentication
 	@RequestMapping(method = RequestMethod.POST)
@@ -219,7 +223,7 @@ public class UserResumeController {
 
 		return degree;
 	}
-
+	//管理用户简历
 	@RequestMapping("/findByUserId")
 	public String addUserResume(Long userId, Model model,
 			HttpServletRequest request) throws Exception {
@@ -317,7 +321,8 @@ public class UserResumeController {
 				org.kd.server.common.util.LogRecord
 						.info("recruitUserResume == null");
 			}
-			email = enterprise.getEmail();
+			//email = enterprise.getEmail();
+			email = recruitInfo.getEmail();
 		} else {
 			if (!email.matches(PublicInfoConfig.emailRegex)) {
 				throw new BusinessException(RetMsg.emailError,
@@ -332,8 +337,7 @@ public class UserResumeController {
 				DateUtil.formatDateByString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		map.put("userResume", userResume);
 
-		mailSender
-				.send(map,
+		mailSender.send(map,
 						"尊敬的快点优职UJOB用户，有新的求职者向您邮箱发送简历，请贵公司及时查看并回复，欢迎使用快点优职UJOB平台。(快点优职，让天下没有难找的工作)",
 						"sendResume.ftl", email);
 
@@ -349,7 +353,79 @@ public class UserResumeController {
 		model.addAttribute("recruitInfo", recruitInfo);
 		return "userResume/sendUserResume";
 	}
+	
+	
+	 
 
+	/**
+	 * @author bojiehuang@163.com
+	 * @param userId
+	 * @param style
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/showResume")
+	public String showResume(@RequestParam(required = false, defaultValue = "0") long userId,
+			@RequestParam(required = false, defaultValue = "default") String style){
+		 String ip = "114.215.97.225";//兼容測試環境和正式環境
+		//使用样式之前查看数据库是否存放有这个用户的使用权限
+		/**。。。。
+		 * 添加的权限使用代码
+		 */
+		 UserResume userResume  = null;
+		 try {
+			  userResume = userResumeService.findByUserId(userId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
+		 if(userResume == null)
+	     return StringUtil.parseUTF_8To8859_1("快点优职提示您！<br>没有此用户的简历数据！"); 
+	 
+		   //获取简历基本框架
+		   String filePath = this.getClass().getClassLoader().getResource("/"+"resume.html").getPath();
+		   File file = new File(filePath);
+		   if(!file.exists()){
+	       return StringUtil.parseUTF_8To8859_1("快点优职提示您！<br>简历基本信息丢失！");    
+		   }
+		   
+		   Map<String,String> map = new HashMap<String, String>();
+		   //获取简历样式
+		   String CSSPath = "http://www.kdwork.com:8888/resumeStyle/"+style+".css";
+		   map.put("CSSPath", CSSPath);
+		   map.put("tx", "http://"+ip+userResume.getUserImage());
+		   map.put("age", userResume.getUserAge()+"");
+		   
+		   String phone = userResume.getMobilePhone();
+		   phone = phone.substring(0, 3)+"********";
+		   map.put("phone",phone);//+
+		   
+		   map.put("height",userResume.getUserStature());
+		   map.put("city", userResume.getCity().getName());
+		   map.put("name", userResume.getUserName());
+		   map.put("school",userResume.getUserAtSchool());
+		   map.put("intent",userResume.getWorkIntention());
+		   map.put("title",userResume.getUserName()+"的简历");
+		   
+		   String qq = userResume.getQq()+"";
+		   qq = qq.substring(0, 3)+"********";
+		   map.put("qq",qq);//+
+		   
+		   map.put("spec",userResume.getSpecialty());
+		   map.put("grade",userResume.getGrade().getName());
+		   map.put("u_grade", userResume.getUgrade());
+		   map.put("email",  userResume.getEmail());
+		   map.put("intro", userResume.getIntroduce());
+	    try {
+			String responseHtml =  TempletParseUtil.parseFromMap(filePath, map);
+			return StringUtil.parseUTF_8To8859_1(responseHtml);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    return StringUtil.parseUTF_8To8859_1("快点优职提示您！<br>无法获取信息！");  
+	}
+	
 	@RequiresAuthentication
 	@RequestMapping("/sendUserResumeLog")
 	public String sendUserResumeLog(Model model, HttpServletRequest request,

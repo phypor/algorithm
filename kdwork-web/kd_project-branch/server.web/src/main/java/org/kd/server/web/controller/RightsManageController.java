@@ -1,9 +1,17 @@
 package org.kd.server.web.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.kd.server.beans.entity.Enterprise;
 import org.kd.server.beans.entity.Permission;
 import org.kd.server.beans.entity.Role;
 import org.kd.server.beans.entity.User;
+import org.kd.server.beans.vo.QueryCondition;
+import org.kd.server.service.EnterpriseService;
 import org.kd.server.service.PermissionService;
 import org.kd.server.service.RoleService;
 import org.kd.server.service.UserService;
@@ -11,10 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  * zmy
@@ -33,6 +37,9 @@ public class RightsManageController {
 	
 	@Resource(name="permissionService")
 	private PermissionService permissionService;
+	
+	@Resource(name="enterpriseService")
+	private EnterpriseService enterpriseService;
 
 	//删除所有用户角色 (包括该角色所拥有的权限表信息一起删除)
 	@RequestMapping("/delAll")
@@ -52,10 +59,11 @@ public class RightsManageController {
 	@RequiresRoles("administrator")
 	public String roles(Long userId,Model model) throws Exception{
 		User user = userService.getById(User.class, userId);
-		
 		model.addAttribute("roles", user.getRoles());
 		return "";
 	}
+	
+ 
 	
 	//给指定用户添加角色
 	@RequestMapping(value="/addRole",method=RequestMethod.POST)
@@ -173,7 +181,6 @@ public class RightsManageController {
 		role3.setDescription("招生办用户角色");
 		role3.setPermissions(list3);
 		roleService.save(role4);
-
 		return "";
 	}
 }

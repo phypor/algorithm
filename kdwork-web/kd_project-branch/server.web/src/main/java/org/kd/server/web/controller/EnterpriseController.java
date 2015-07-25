@@ -116,23 +116,137 @@ public class EnterpriseController {
 		return "enterprise/enterpriseEdit";
 	}
 
+	
+
+	/**
+	 * @author bojiehuang@163.com
+	 * @param page
+	 * @param pageSize
+	 * @param model
+	 * @return
+	 */
+	@RequiresAuthentication
+	@RequestMapping("/checkEnterprise")
+	public String checkEnterprisePage(@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "10") int pageSize,Model model) {
+		List<QueryCondition> queryConditions = new ArrayList<QueryCondition>();
+	    queryConditions.add(new QueryCondition("businessLicenseCheck = false"));
+	    queryConditions.add(new QueryCondition("user != null"));
+	    Pagination<Enterprise> enterprisePagination = null;
+		try {
+		  enterprisePagination = enterpriseService
+					.getPagination(Enterprise.class, queryConditions,
+							"order by id desc", page, pageSize);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    model.addAttribute("result", enterprisePagination);
+	    
+		return "enterprise/checkEnterprise";
+	}
+
+	 
+	/**
+	 * @author bojiehuang@163.com
+	 * 企业认证通过
+	 * @param id
+	 */
+	@ResponseBody
+	@RequiresAuthentication
+	@RequestMapping("/authenticationEnterprise")
+	public Map<String, Object> authenticationEnterprise(long id,HttpServletRequest request){
+		LogRecord.info("id:"+ id);
+		Enterprise enterprise = null;
+		try {
+			enterprise = enterpriseService.getById(Enterprise.class, id);
+			if(enterprise!=null){
+				enterprise.setBusinessLicenseCheck(true);	
+				enterpriseService.update(enterprise);
+				int percent = completionDegree(enterprise);
+				User currentUser = (User) request.getSession().getAttribute(
+						PublicInfoConfig.currentUser);
+				User user = userService.getById(User.class, currentUser.getId());
+				user.setEnterpriseInfoPercent(percent);
+				userService.update(user);
+				LogRecord.info(enterprise.getName()+" 审核通过 "+percent+"%");
+			}else{
+				LogRecord.info("没有该企业信息");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Map<String, Object> content = new HashMap<String, Object>();
+		content.put("enterprise", "test");
+		return content;
+	}
+	
+	/**
+	 * @author bojiehuang@163.com
+	 * 取消企业认证通过
+	 * @param id
+	 */
+	@ResponseBody
+	@RequiresAuthentication
+	@RequestMapping("/cancelAuthenticationEnterprise")
+	public Map<String, Object> cancelAuthenticationEnterprise(long id,HttpServletRequest request){
+		LogRecord.info("id:"+ id);
+		Enterprise enterprise = null;
+		try {
+			enterprise = enterpriseService.getById(Enterprise.class, id);
+			if(enterprise!=null){
+				enterprise.setBusinessLicenseCheck(false);	
+				enterpriseService.update(enterprise);
+				int percent = completionDegree(enterprise);
+				User currentUser = (User) request.getSession().getAttribute(
+						PublicInfoConfig.currentUser);
+				User user = userService.getById(User.class, currentUser.getId());
+				user.setEnterpriseInfoPercent(percent);
+				userService.update(user);
+				LogRecord.info(enterprise.getName()+" 审核不通过");
+			}else{
+				LogRecord.info("没有该企业信息");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Map<String, Object> content = new HashMap<String, Object>();
+		content.put("enterprise", "test");
+		return content;
+	}
+	
 	@ResponseBody
 	@RequiresAuthentication
 	@RequestMapping(method = RequestMethod.POST)
 	public Map<String, Object> addEnterprise(Enterprise enterprise,
 			Model model, HttpServletRequest request) throws Exception {
+		Date date = new Date();
 		User currentUser = (User) request.getSession().getAttribute(
 				PublicInfoConfig.currentUser);
 		enterprise.setUser(currentUser);
-
+		 
 		if (enterprise.getId() == null || enterprise.getId() == 0) {
 			enterprise.setId(null);
+			enterprise.setCreateTime(date);
+			enterprise.setRefreshTime(date);
+			enterprise.seteType(currentUser.getUserType());
 			enterpriseService.save(enterprise);
-			LogRecord.info("enterpriseService.save");
+			LogRecord.info(enterprise.getId()+" enterpriseService.save");
 		} else {
 			if (enterprise.getUser() != null
 					&& enterprise.getUser().getId().equals(currentUser.getId())) {
+				Enterprise tmp = enterpriseService.findByUserId( currentUser.getId());
+				enterprise.setId(tmp.getId());
+				LogRecord.info(tmp.getUser().getId()+"");
+				enterprise.setBusinessLicenseCheck(tmp.getBusinessLicenseCheck());
+				enterprise.setUser(tmp.getUser());
+				enterprise.seteType(currentUser.getUserType());
+				enterprise.setCreateTime(tmp.getCreateTime());
+				enterprise.setRefreshTime(date);
 				enterpriseService.update(enterprise);
+				LogRecord.info(tmp.getUser().getId()+" enterpriseService.update");
 			} else {
 
 				throw new BusinessException(RetMsg.operateAuthorizedError,
@@ -141,7 +255,7 @@ public class EnterpriseController {
 		}
 
 		int percent = completionDegree(enterprise);
-		Date date = new Date();
+	 
 		String dt = new String(
 				new SimpleDateFormat("yyyy-MM-dd hh-mm-ss").format(date));
 
@@ -168,7 +282,13 @@ public class EnterpriseController {
 		return map;
 	}
 
+	/**
+	 * @author bojiehuang@163.com
+	 * @param enterprise
+	 * @return
+	 */
 	private int completionDegree(Enterprise enterprise) {
+		LogRecord.info("是否验证 "+enterprise.getBusinessLicenseCheck());
 		int percent = 100;
 		PropertyDescriptor[] props = null;
 		try {
@@ -184,13 +304,27 @@ public class EnterpriseController {
 
 					Method getter = props[i].getReadMethod();
 					Object value = getter.invoke(enterprise);
+					if (name.equals("businessLicenseImage") ){
+						if(value!= null && !value.equals("")){
+							if(enterprise.getBusinessLicenseCheck() ==false){
+								if(enterprise.geteType() == 2){
+							 		LogRecord.info(name + "未认证 -14");
+									percent -= 14;			
+								}
+								if(enterprise.geteType() == 3){
+									LogRecord.info(name + "没数据 -26");		
+									percent -= 26;	
+								}
+							}
+						}
+					}
 					if (!object.equals(List.class)
 							&& (value == null || value.equals(""))) {
 						if (name.equals("logoImage")) {
 							percent -= 10;
 							LogRecord.info(name + "没数据 -10");
 						}
-
+						
 						if (name.equals("name") || name.equals("contacts")
 								|| name.equals("phone") || name.equals("email")
 								|| name.equals("websiteAddress")) {
@@ -220,21 +354,18 @@ public class EnterpriseController {
 								LogRecord.info(name + "没数据 -6");
 								percent -= 6;
 							}
-
-							if (name.equals("businessLicenseImage")) {
-								LogRecord.info(name + "没数据 -14");
+						 	if (name.equals("businessLicenseImage") ){
+						 		LogRecord.info(name + "没数据 -14");
 								percent -= 14;
 							}
-
 						}
 
 						if (enterprise.getUser() != null
 								&& enterprise.getUser().getUserType() == 3) {
-							if (name.equals("businessLicenseImage")) {
+						 	if (name.equals("businessLicenseImage") ) {
 								LogRecord.info(name + "没数据 -26");
 								percent -= 26;
-							}
-
+							} 
 							if (name.equals("schoolMotto")) {
 								LogRecord.info(name + "没数据 -6");
 								percent -= 6;
@@ -245,7 +376,7 @@ public class EnterpriseController {
 								percent -= 12;
 							}
 						}
-					}
+					} 
 					System.out.println("--" + name + "--");
 					System.out.println(percent);
 				} catch (Exception e) {
@@ -256,6 +387,8 @@ public class EnterpriseController {
 		return percent;
 	}
 
+
+	
 	@RequestMapping("/findByUserId")
 	public String addEnterprise(Long userId, Model model,
 			HttpServletRequest request) throws Exception {
@@ -305,16 +438,11 @@ public class EnterpriseController {
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			Model model, HttpServletRequest request) throws Exception {
-		User user = (User) request.getSession().getAttribute(
-				PublicInfoConfig.currentUser);
-
+		User user = (User) request.getSession().getAttribute(PublicInfoConfig.currentUser);
 		List<QueryCondition> queryConditions = new ArrayList<QueryCondition>();
-		queryConditions.add(new QueryCondition(
-				"recruitInfo.enterprise.user.id=" + user.getId()));
-
+		queryConditions.add(new QueryCondition("recruitInfo.enterprise.user.id=" + user.getId()));
 		Pagination<RecruitUserResume> recruitUserResumePagination = recruitUserResumeService
-				.getPagination(RecruitUserResume.class, queryConditions,
-						"order by id desc", page, pageSize);
+				.getPagination(RecruitUserResume.class, queryConditions,"order by id desc", page, pageSize);
 
 		List<RecruitUserResume> recruitUserResumeList = new ArrayList<RecruitUserResume>();
 		if (recruitUserResumePagination.getRecordCount() > 0) {
@@ -325,15 +453,17 @@ public class EnterpriseController {
 					recruitUserResume.setSendTime(new Date());
 				}
 				BeanUtils.copyProperties(newObj, recruitUserResume);
-				newObj.setRecruitInfo(null);
+				UserVo userVo = null;//newObj.setRecruitInfo(null);//簡歷信息
+				userVo = recruitUserResume.getUserResume().getUser().getUserVo();
+				newObj.setUserVo(userVo);
 				recruitUserResumeList.add(newObj);
+				LogRecord.info(newObj.toString());
 			}
 			recruitUserResumePagination.setRecordList(recruitUserResumeList);
-		}
-		LogRecord.info(user.getNickName() + "\n" + "简历数为:"
-				+ recruitUserResumePagination.getRecordCount());
+		} 
+		LogRecord.info(user.getNickName() + "\n" + "简历数为:"	+ recruitUserResumePagination.getRecordCount());
+		
 		model.addAttribute("result", recruitUserResumePagination);
-
 		if (!request.getRequestURI().endsWith(".json")) {
 			model.addAttribute("userId", user.getId());
 		}

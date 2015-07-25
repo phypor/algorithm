@@ -4,7 +4,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class DesEncrypt {
-	public static final String USER_ACCESS_TOKEN_KEY = "hj52hy9z";
+	public static final String USER_ACCESS_TOKEN_KEY = "hj92hy9z";
 
 	private static byte[] iv = { 4, 2, 9, 2, 3, 4, 2, 7 };
 

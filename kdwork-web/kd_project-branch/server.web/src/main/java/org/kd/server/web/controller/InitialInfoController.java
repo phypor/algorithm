@@ -238,7 +238,8 @@ public class InitialInfoController {
 	 */
 	@RequestMapping("/InitialPosition")
 	public void InitialPosition() throws Exception {
-		String file_path = "C:/position.txt";
+		String file_path = this.getClass().getClassLoader()
+				.getResource("/position.txt").getPath();
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new FileInputStream(file_path), "GB2312"));
 		String str = null;

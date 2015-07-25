@@ -30,6 +30,10 @@ public class EnterpriseServiceImpl extends DefultBaseService implements
 				queryConditions);
 	}
 
+ public List<Enterprise> getEnterpriseByJpql(String jqpl) throws Exception{
+ return  baseService.getByJpql(jqpl, Enterprise.class); //"select p from Enterprise p where p.businessLicenseCheck=0"
+ }
+	
 	public boolean saveOrUpdate(Enterprise enterprise) throws Exception {
 		return true;
 	}

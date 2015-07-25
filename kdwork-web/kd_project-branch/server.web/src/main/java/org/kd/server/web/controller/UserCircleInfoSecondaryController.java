@@ -1,13 +1,29 @@
 package org.kd.server.web.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.kd.server.beans.entity.*;
+import org.kd.server.beans.entity.CircleInfoClickLikeLog;
+import org.kd.server.beans.entity.CircleInfoDiscuss;
+import org.kd.server.beans.entity.FriendCircle;
+import org.kd.server.beans.entity.User;
+import org.kd.server.beans.entity.UserCircleInfo;
 import org.kd.server.beans.param.PublicInfoConfig;
 import org.kd.server.beans.param.RetMsg;
 import org.kd.server.beans.vo.Pagination;
 import org.kd.server.beans.vo.QueryCondition;
 import org.kd.server.beans.vo.UserVo;
 import org.kd.server.common.exception.BusinessException;
+import org.kd.server.common.util.LogRecord;
 import org.kd.server.service.CircleInfoClickLikeLogService;
 import org.kd.server.service.CircleInfoDiscussService;
 import org.kd.server.service.UserCircleInfoService;
@@ -15,12 +31,11 @@ import org.kd.server.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/userCircleInfo")
@@ -101,7 +116,7 @@ public class UserCircleInfoSecondaryController {
 	@RequestMapping(value="/clickLike",method=RequestMethod.POST)
 	public Model clickLike(Model model,HttpServletRequest request,Long userCircleInfoId) throws Exception{
 		User user = (User) request.getSession().getAttribute(PublicInfoConfig.currentUser);
-		
+		LogRecord.info(user.getNickName()+" 点赞+1");
 		List<QueryCondition>  queryConditionList = new ArrayList<QueryCondition>();
 		queryConditionList.add(new QueryCondition("user.id",QueryCondition.EQ,user.getId()));
 		queryConditionList.add(new QueryCondition("userCircleInfo.id",QueryCondition.EQ,userCircleInfoId));
@@ -127,7 +142,6 @@ public class UserCircleInfoSecondaryController {
 			model.addAttribute("status", RetMsg.repeatAddError);
 			model.addAttribute("msg", RetMsg.repeatAddErrorMsg);
 		}
-		
 		return model;
 	}
 
@@ -135,16 +149,16 @@ public class UserCircleInfoSecondaryController {
 	@RequestMapping(value="/cancelClickLike",method=RequestMethod.POST)
 	public Model cancelClickLike(Model model,HttpServletRequest request,Long userCircleInfoId) throws Exception{
 		User user = (User) request.getSession().getAttribute(PublicInfoConfig.currentUser);
-		
+		LogRecord.info(user.getNickName()+" 取消赞！");
 		List<QueryCondition>  queryConditionList = new ArrayList<QueryCondition>();
 		queryConditionList.add(new QueryCondition("user.id",QueryCondition.EQ,user.getId()));
 		queryConditionList.add(new QueryCondition("userCircleInfo.id",QueryCondition.EQ,userCircleInfoId));
-		
 		long count = circleInfoClickLikeLogService.getRecordCount(CircleInfoClickLikeLog.class, queryConditionList);
-		
+		userCircleInfoService.getById(UserCircleInfo.class,userCircleInfoId).setClickLikeNum((int) (count-1));
 		if(count>0){
 			List<CircleInfoClickLikeLog> circleInfoClickLikeLogList = circleInfoClickLikeLogService.get(CircleInfoClickLikeLog.class, queryConditionList);
-		    if(!circleInfoClickLikeLogList.isEmpty()){
+		    if(!circleInfoClickLikeLogList.isEmpty())
+		    {
 		    	for (CircleInfoClickLikeLog circleInfoClickLikeLog : circleInfoClickLikeLogList) {
 		    		circleInfoClickLikeLogService.delete(CircleInfoClickLikeLog.class,circleInfoClickLikeLog.getId());
 				}
@@ -153,7 +167,6 @@ public class UserCircleInfoSecondaryController {
 			model.addAttribute("status", RetMsg.repeatAddError);
 			model.addAttribute("msg", RetMsg.repeatAddErrorMsg);
 		}
-		
 		return model;
 	}
 	

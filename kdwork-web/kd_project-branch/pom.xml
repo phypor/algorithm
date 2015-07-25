@@ -34,7 +34,7 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>com.kd</groupId>
+   			<groupId>com.kd</groupId>
 			<artifactId>server.beans</artifactId>
 			<version>${server.beans.version}</version>
 		</dependency>
