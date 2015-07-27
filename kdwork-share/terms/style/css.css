@@ -324,20 +324,20 @@ img{-ms-interpolation-mode:bicubic}
 
 /*--------------------resume------------*/
 .resume{max-width:700px; overflow:hidden; margin:0 auto}
-.resume_banner{width:100%; height:250px; position:relative; background:url(../images/resume_banner.jpg) top center no-repeat}
-.resume_banner .tx{width:110px; height:110px; position:absolute; top:195px; left:50%; margin-left:-55px}
+.resume_banner{width:100%; height:200px; position:relative; background:url(../images/resume_banner.jpg) top center no-repeat}
+.resume_banner .tx{width:110px; height:110px; position:absolute; top:145px; left:50%; margin-left:-55px}
 .resume_banner .tx img{width:110px; height:110px; border-radius:50%}
-.resume_text{text-align:center; padding-top:100px}
-.resume_text h1{font-size:26px; font-family:"微软雅黑"; height:30px; line-height:30px; color:#333333}
+.resume_text{text-align:center; padding-top:90px}
+.resume_text h1{font-size:18px; font-family:"微软雅黑"; height:30px; line-height:30px; color:#333333}
 .resume_text h1 span.male{color:#333; font-weight:normal; background:url(../images/male.jpg) right center no-repeat; padding-right:20px}
 .resume_text h1 span.female{color:#333; font-weight:normal; background:url(../images/female.jpg) right center no-repeat; padding-right:20px}
-.resume_text p{line-height:30px; color:#999999; font-size:18px; padding:15px 14% 0;}
+.resume_text p{line-height:24px; color:#999999; font-size:14px; padding:10px 14% 0;}
 .resume_box{padding:60px 7% 50px 9%;}
 .resume_box ul{margin:0}
 .resume_box ul li{border-left:1px solid #dddddd; position:relative; padding-left:45px; padding-bottom:30px}
-.resume_box ul li h1{height:36px; line-height:36px; font-size:24px; color:#333333; font-weight:normal; padding-bottom:15px; border-bottom:1px solid #dddddd; margin-bottom:10px}
-.resume_box ul li p{height:48px; line-height:48px; font-size:18px; color:#aaaaaa}
+.resume_box ul li h1{height:30px; line-height:30px; font-size:16px; color:#333333; font-weight:normal; padding-bottom:15px; border-bottom:1px solid #dddddd; margin-bottom:10px}
+.resume_box ul li p{height:48px; line-height:48px; font-size:14px; color:#666}
 .resume_box ul li p span{color:#666666}
-.resume_box ul li .grxx{width:36px; height:36px; position:absolute; top:0; left:-19px; background:url(../images/grxx.jpg)}
-.resume_box ul li .qzyx{width:36px; height:36px; position:absolute; top:0; left:-19px; background:url(../images/qzyx.jpg)}
-.resume_box ul li .lxfs{width:36px; height:36px; position:absolute; top:0; left:-19px; background:url(../images/lxfs.jpg)}
+.resume_box ul li .grxx{width:30px; height:30px; position:absolute; top:0; left:-15px; background:url(../images/grxx.jpg)}
+.resume_box ul li .qzyx{width:30px; height:30px; position:absolute; top:0; left:-15px; background:url(../images/qzyx.jpg)}
+.resume_box ul li .lxfs{width:30px; height:30px; position:absolute; top:0; left:-15px; background:url(../images/lxfs.jpg)}
