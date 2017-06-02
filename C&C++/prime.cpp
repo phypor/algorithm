@@ -17,7 +17,7 @@ int main()
 		if ( !table[i] )
 			for ( int j = 2 * i; j < N; j = j + i )
 			{
-				table[j] = 1;//标志非素数 
+				table[j] = 1;  
 			}
 	}
 	rep( i, 2, n + 1 )
@@ -31,3 +31,5 @@ int main()
 	}
 	return(0);
 }
+
+
